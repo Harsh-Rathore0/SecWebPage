@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-image: url('/frontend/sky.jpg'); /* Set your uploaded image as background */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.15); /* Semi-transparent white */
+            backdrop-filter: blur(10px); /* Glassy effect */
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25); /* Add a glossy shadow effect */
+            max-width: 600px; /* Adjusted for wider table */
+            width: 100%;
+        }
+
+        h1 {
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            color: #ffffff; /* Table text color */
+        }
+
+        th {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        tr:hover {
+            background-color: rgba(255, 255, 255, 0.3); /* Highlight row on hover */
+        }
+
+        nav a {
+            color: #ffffff; 
+            text-decoration: none; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Admin Dashboard</h1>
+            <nav>
+                <a href="/">Logout</a> <!-- Add logout functionality -->
+            </nav>
+        </header>
+        <main>
+            <h2>Registered Users</h2>
+            <table id="usersTable">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- User data will be populated here -->
+                </tbody>
+            </table>
+        </main>
+
+        <script>
+            // Fetch users from the backend
+            fetch('/api/admin/dashboard', {
+                method: 'GET',
+                headers: {
+                    'Role': 'Admin' // Pass role in headers for authorization
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Unauthorized');
+                }
+                return response.json();
+            })
+            .then(users => {
+                const usersTable = document.getElementById('usersTable').getElementsByTagName('tbody')[0];
+                users.forEach(user => {
+                    const row = usersTable.insertRow();
+                    const cellEmail = row.insertCell(0);
+                    const cellRole = row.insertCell(1);
+                    cellEmail.textContent = user.email;
+                    cellRole.textContent = user.role;
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching users:', error);
+                alert('Failed to load users. Please check your permissions.');
+            });
+        </script>
+
+    </div>
+</body>
+</html>

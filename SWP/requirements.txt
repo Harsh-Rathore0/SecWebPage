@@ -1,0 +1,6 @@
+flask
+firebase-admin
+bcrypt
+requests
+redirect
+url_for
